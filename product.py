@@ -90,6 +90,32 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
             return pool.get('product.template.account')
         return super(Template, cls).multivalue_model(field)
 
+    @classmethod
+    def default_account_expense(cls, **pattern):
+        Configuration = Pool().get('account.configuration')
+        config = Configuration(1)
+        account = config.get_multivalue(
+            'default_product_account_expense', **pattern)
+        return account.id if account else None
+
+    @classmethod
+    def default_account_revenue(cls, **pattern):
+        Configuration = Pool().get('account.configuration')
+        config = Configuration(1)
+        account = config.get_multivalue(
+            'default_product_account_revenue', **pattern)
+        return account.id if account else None
+
+    @classmethod
+    def default_accounts_category(cls):
+        Config = Pool().get('product.configuration')
+        return Config(1).default_accounts_category
+
+    @classmethod
+    def default_taxes_category(cls):
+        Config = Pool().get('product.configuration')
+        return Config(1).default_taxes_category
+
     def get_account(self, name, **pattern):
         if self.accounts_category:
             return super(Template, self).get_account(name, **pattern)
