@@ -8,6 +8,7 @@ from trytond.pool import PoolMeta, Pool
 from trytond.tools.multivalue import migrate_property
 from trytond.modules.company.model import (
     CompanyMultiValueMixin, CompanyValueMixin)
+from trytond.transaction import Transaction
 
 __all__ = ['Template', 'TemplateAccount', 'TemplateCustomerTax',
     'TemplateSupplierTax']
@@ -84,6 +85,33 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
             ['accounts_category', 'taxes_category'])
 
     @classmethod
+    def __register__(cls, module_name):
+        TableHandler = backend.get('TableHandler')
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Category = pool.get('product.category')
+        sql_table = cls.__table__()
+        category = Category.__table__()
+
+        table = TableHandler(cls, module_name)
+        category_exists = table.column_exist('category')
+
+        # Migration from 3.8: rename account_category into accounts_category
+        if (table.column_exist('account_category')
+                and not table.column_exist('accounts_category')):
+            table.column_rename('account_category', 'accounts_category')
+
+        super(Template, cls).__register__(module_name)
+
+        # Migration from 3.8: duplicate category into account_category
+        if category_exists:
+            # Only accounting category until now
+            cursor.execute(*category.update([category.accounting], [True]))
+            cursor.execute(*sql_table.update(
+                    [sql_table.account_category],
+                    [sql_table.category]))
+
+    @classmethod
     def multivalue_model(cls, field):
         pool = Pool()
         if field in {'account_expense', 'account_revenue'}:
@@ -122,17 +150,13 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
         else:
             return self.get_multivalue(name[:-5], **pattern)
 
-    @property
-    def customer_taxes_used(self):
+    def get_taxes(self, name):
         if self.accounts_category:
-            return super(Template, self).customer_taxes_used
-        return self.customer_taxes
-
-    @property
-    def supplier_taxes_used(self):
-        if self.accounts_category:
-            return super(Template, self).supplier_taxes_used
-        return self.supplier_taxes
+            return super(Template, self).get_taxes(name)
+        if name == 'customer_taxes':
+            return self.customer_taxes
+        else:
+            return self.supplier_taxes
 
 
 class TemplateAccount(ModelSQL, CompanyValueMixin):
