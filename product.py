@@ -151,9 +151,9 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
             return self.get_multivalue(name[:-5], **pattern)
 
     def get_taxes(self, name):
-        if self.accounts_category:
+        if self.taxes_category:
             return super(Template, self).get_taxes(name)
-        if name == 'customer_taxes':
+        if name in ('customer_taxes', 'customer_taxes_used'):
             return self.customer_taxes
         else:
             return self.supplier_taxes

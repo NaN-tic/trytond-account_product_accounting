@@ -106,10 +106,12 @@ class AccountProductAccountingTestCase(ModuleTestCase):
             template.account_category = category
             template.accounts_category = False
             template.account_revenue = account_revenue
+            template.taxes_category = False
             template.customer_taxes = [tax]
             template.save()
 
             self.assertEqual(template.account_revenue_used, account_revenue)
+            self.assertEqual(len(template.customer_taxes), 1)
             self.assertEqual(len(template.customer_taxes_used), 1)
 
 def suite():
