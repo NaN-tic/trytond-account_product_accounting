@@ -92,12 +92,13 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
         Category = pool.get('product.category')
         sql_table = cls.__table__()
         category = Category.__table__()
-
         table = TableHandler(cls, module_name)
         category_exists = table.column_exist('category')
 
         # Migration from 3.8: rename account_category into accounts_category
-        if (table.column_exist('account_category')
+        old_table = 'ir_module_module'            
+        if (TableHandler.table_exist(old_table)
+                and table.column_exist('account_category')
                 and not table.column_exist('accounts_category')):
             table.column_rename('account_category', 'accounts_category')
 
