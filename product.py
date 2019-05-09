@@ -76,6 +76,30 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
     supplier_taxes_used = fields.Function(fields.One2Many('account.tax', None,
         'Supplier Taxes Used'), 'get_taxes')
 
+    account_depreciation = fields.MultiValue(fields.Many2One('account.account',
+            'Account Depreciation', domain=[
+                ('type.fixed_asset', '=', True),
+                ('company', '=', Eval('context', {}).get('company', -1)),
+                ],
+            states={
+                'invisible': (~Eval('context', {}).get('company')
+                    | Eval('account_parent')
+                    | ~Eval('accounting', False)),
+                },
+            depends=['account_parent', 'accounting']))
+    account_asset = fields.MultiValue(fields.Many2One('account.account',
+            'Account Asset',
+            domain=[
+                ('type.fixed_asset', '=', True),
+                ('company', '=', Eval('context', {}).get('company', -1)),
+                ],
+            states={
+                'invisible': (~Eval('context', {}).get('company')
+                    | Eval('account_parent')
+                    | ~Eval('accounting', False)),
+                },
+            depends=['account_parent', 'accounting']))
+
     @classmethod
     def __setup__(cls):
         super(Template, cls).__setup__()
@@ -96,7 +120,7 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
         category_exists = table.column_exist('category')
 
         # Migration from 3.8: rename account_category into accounts_category
-        old_table = 'ir_module_module'            
+        old_table = 'ir_module_module'
         if (TableHandler.table_exist(old_table)
                 and table.column_exist('account_category')
                 and not table.column_exist('accounts_category')):
@@ -115,7 +139,8 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
     @classmethod
     def multivalue_model(cls, field):
         pool = Pool()
-        if field in {'account_expense', 'account_revenue'}:
+        if field in {'account_expense', 'account_revenue',
+                'account_depreciation', 'account_asset'}:
             return pool.get('product.template.account')
         return super(Template, cls).multivalue_model(field)
 
@@ -179,12 +204,29 @@ class TemplateAccount(ModelSQL, CompanyValueMixin):
             ('company', '=', Eval('company', -1)),
             ],
         depends=['company'])
+    account_depreciation = fields.Many2One(
+        'account.account', "Account Depreciation",
+        domain=[
+            ('type.fixed_asset', '=', True),
+            ('company', '=', Eval('company', -1)),
+            ],
+        depends=['company'])
+    account_asset = fields.Many2One(
+        'account.account', "Account Asset",
+        domain=[
+            ('type.fixed_asset', '=', True),
+            ('company', '=', Eval('company', -1)),
+            ],
+        depends=['company'])
 
     @classmethod
     def __register__(cls, module_name):
         TableHandler = backend.get('TableHandler')
         exist = TableHandler.table_exist(cls._table)
-
+        if exist:
+            table = cls.__table_handler__(module_name)
+            exist &= (table.column_exist('account_depreciation')
+                and table.column_exist('account_asset'))
         super(TemplateAccount, cls).__register__(module_name)
 
         if not exist:
@@ -192,8 +234,10 @@ class TemplateAccount(ModelSQL, CompanyValueMixin):
 
     @classmethod
     def _migrate_property(cls, field_names, value_names, fields):
-        field_names.extend(['account_expense', 'account_revenue'])
-        value_names.extend(['account_expense', 'account_revenue'])
+        field_names.extend(['account_expense', 'account_revenue',
+                'account_depreciation', 'account_asset'])
+        value_names.extend(['account_expense', 'account_revenue',
+                'account_depreciation', 'account_asset'])
         fields.append('company')
         migrate_property(
             'product.template', field_names, cls, value_names,
