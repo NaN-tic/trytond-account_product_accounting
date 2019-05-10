@@ -71,11 +71,6 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
                 | Eval('taxes_category')),
             }, depends=['taxes_category'],
         help="The taxes to apply when purchasing the product.")
-    customer_taxes_used = fields.Function(fields.One2Many('account.tax', None,
-        'Customer Taxes Used'), 'get_taxes')
-    supplier_taxes_used = fields.Function(fields.One2Many('account.tax', None,
-        'Supplier Taxes Used'), 'get_taxes')
-
     account_depreciation = fields.MultiValue(fields.Many2One('account.account',
             'Account Depreciation', domain=[
                 ('type.fixed_asset', '=', True),
@@ -83,10 +78,8 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
                 ],
             states={
                 'invisible': (~Eval('context', {}).get('company')
-                    | Eval('account_parent')
-                    | ~Eval('accounting', False)),
-                },
-            depends=['account_parent', 'accounting']))
+                    | Eval('accounts_category')),
+                }, depends=['accounts_category']))
     account_asset = fields.MultiValue(fields.Many2One('account.account',
             'Account Asset',
             domain=[
@@ -95,10 +88,8 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
                 ],
             states={
                 'invisible': (~Eval('context', {}).get('company')
-                    | Eval('account_parent')
-                    | ~Eval('accounting', False)),
-                },
-            depends=['account_parent', 'accounting']))
+                    | Eval('accounts_category')),
+                }, depends=['accounts_category']))
 
     @classmethod
     def __setup__(cls):
