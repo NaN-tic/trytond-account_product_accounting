@@ -28,6 +28,14 @@ msgctxt "field:product.configuration,default_taxes_category:"
 msgid "Use Category' taxes by default"
 msgstr "Usa impostos de la categoria per defecte"
 
+msgctxt "field:product.template,account_asset:"
+msgid "Account Asset"
+msgstr "Compte d'actiu"
+
+msgctxt "field:product.template,account_depreciation:"
+msgid "Account Depreciation"
+msgstr "Compte d'amortització"
+
 msgctxt "field:product.template,account_expense:"
 msgid "Account Expense"
 msgstr "Compte de despeses"
@@ -119,6 +127,14 @@ msgstr "Data de modificació"
 msgctxt "field:product.template-supplier-account.tax,write_uid:"
 msgid "Write User"
 msgstr "Usuari de modificació"
+
+msgctxt "field:product.template.account,account_asset:"
+msgid "Account Asset"
+msgstr "Compte d'actiu"
+
+msgctxt "field:product.template.account,account_depreciation:"
+msgid "Account Depreciation"
+msgstr "Compte d'amortització"
 
 msgctxt "field:product.template.account,account_expense:"
 msgid "Account Expense"
