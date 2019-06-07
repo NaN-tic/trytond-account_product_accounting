@@ -169,7 +169,8 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
 
     def get_taxes(self, name):
         if self.taxes_category:
-            return super(Template, self).get_taxes(name)
+            #TODO: try to remove set and list
+            return list(set(super(Template, self).get_taxes(name)))
         if name in ('customer_taxes', 'customer_taxes_used'):
             return self.customer_taxes
         else:
