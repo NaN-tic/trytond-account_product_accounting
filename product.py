@@ -15,7 +15,6 @@ __all__ = ['Template', 'TemplateAccount', 'TemplateCustomerTax',
 
 
 class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
-    __metaclass__ = PoolMeta
     __name__ = 'product.template'
     accounts_category = fields.Boolean('Use Category\'s accounts',
             help="Check to use the accounts defined on the account category.")
