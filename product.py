@@ -100,18 +100,18 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
 
     @classmethod
     def __register__(cls, module_name):
-        TableHandler = backend.get('TableHandler')
+
         cursor = Transaction().connection.cursor()
         pool = Pool()
         Category = pool.get('product.category')
         sql_table = cls.__table__()
         category = Category.__table__()
-        table = TableHandler(cls, module_name)
+        table = backend.TableHandler(cls, module_name)
         category_exists = table.column_exist('category')
 
         # Migration from 3.8: rename account_category into accounts_category
         old_table = 'ir_module_module'
-        if (TableHandler.table_exist(old_table)
+        if (backend.TableHandler.table_exist(old_table)
                 and table.column_exist('account_category')
                 and not table.column_exist('accounts_category')):
             table.column_rename('account_category', 'accounts_category')
@@ -212,8 +212,7 @@ class TemplateAccount(ModelSQL, CompanyValueMixin):
 
     @classmethod
     def __register__(cls, module_name):
-        TableHandler = backend.get('TableHandler')
-        exist = TableHandler.table_exist(cls._table)
+        exist = backend.TableHandler.table_exist(cls._table)
         if exist:
             table = cls.__table_handler__(module_name)
             exist &= (table.column_exist('account_depreciation')

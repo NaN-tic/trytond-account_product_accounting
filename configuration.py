@@ -61,11 +61,10 @@ class ProductConfiguration(metaclass=PoolMeta):
 
     @classmethod
     def __register__(cls, module_name):
-        TableHandler = backend.get('TableHandler')
 
         # Migration from 3.8: rename default_account_category into
         # default_accounts_category
-        table = TableHandler(cls, module_name)
+        table = backend.TableHandler(cls, module_name)
         if table.column_exist('default_account_category'):
             table.column_rename(
                 'default_account_category', 'default_accounts_category')
