@@ -58,6 +58,8 @@ class AccountProductAccountingTestCase(ModuleTestCase):
                 list_price=Decimal(10),
                 default_uom=unit.id,
                 products=[],
+                accounts_category=False,
+                taxes_category=False,
                 )
             template.save()
 
