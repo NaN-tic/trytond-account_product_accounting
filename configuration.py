@@ -73,8 +73,8 @@ class ProductConfiguration(metaclass=PoolMeta):
 
     @classmethod
     def default_default_accounts_category(cls):
-        return False
+        return True
 
     @classmethod
     def default_default_taxes_category(cls):
-        return False
+        return True
