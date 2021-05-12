@@ -9,6 +9,7 @@ from trytond.tools.multivalue import migrate_property
 from trytond.modules.company.model import (
     CompanyMultiValueMixin, CompanyValueMixin)
 from trytond.transaction import Transaction
+from trytond.modules.account_product.product import account_used
 
 __all__ = ['Template', 'TemplateAccount', 'TemplateCustomerTax',
     'TemplateSupplierTax']
@@ -166,9 +167,25 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
         else:
             return self.get_multivalue(name[:-5], **pattern)
 
+    @property
+    @account_used('account_depreciation', 'account_category')
+    def account_depreciation_used(self):
+        if self.accounts_category:
+            return super().account_depreciation_used
+        else:
+            return self.get_multivalue('account_depreciation')
+
+    @property
+    @account_used('account_asset', 'account_category')
+    def account_asset_used(self):
+        if self.accounts_category:
+            return super().account_asset_used
+        else:
+            return self.get_multivalue('account_asset')
+
     def get_taxes(self, name):
         if self.taxes_category:
-            #TODO: try to remove set and list
+            # TODO: try to remove set and list
             taxes = super(Template, self).get_taxes(name)
             if taxes:
                 return list(set(taxes))
