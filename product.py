@@ -193,7 +193,7 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
             return self.customer_taxes
         elif name in ('supplier_taxes', 'supplier_taxes_used'):
             return self.supplier_taxes
-        return super(Template, self).get_taxes(name)
+        return super().get_taxes(name)
 
 
 class TemplateAccount(ModelSQL, CompanyValueMixin):
