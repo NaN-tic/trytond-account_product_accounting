@@ -71,25 +71,6 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
                 | Eval('taxes_category')),
             }, depends=['taxes_category'],
         help="The taxes to apply when purchasing the product.")
-    account_depreciation = fields.MultiValue(fields.Many2One('account.account',
-            'Account Depreciation', domain=[
-                ('type.fixed_asset', '=', True),
-                ('company', '=', Eval('context', {}).get('company', -1)),
-                ],
-            states={
-                'invisible': (~Eval('context', {}).get('company')
-                    | Eval('accounts_category')),
-                }, depends=['accounts_category']))
-    account_asset = fields.MultiValue(fields.Many2One('account.account',
-            'Account Asset',
-            domain=[
-                ('type.fixed_asset', '=', True),
-                ('company', '=', Eval('context', {}).get('company', -1)),
-                ],
-            states={
-                'invisible': (~Eval('context', {}).get('company')
-                    | Eval('accounts_category')),
-                }, depends=['accounts_category']))
 
     @classmethod
     def __setup__(cls):
@@ -98,6 +79,26 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
             Eval('accounts_category', False) | Eval('taxes_category', False))
         cls.account_category.depends.extend(
             ['accounts_category', 'taxes_category'])
+
+        if hasattr(cls, 'depreciable'):
+            cls.account_depreciation = fields.MultiValue(
+                fields.Many2One('account.account', "Account Depreciation",
+                domain=[
+                    ('type.fixed_asset', '=', True),
+                    ('company', '=', Eval('context', {}).get('company', -1)),
+                ], states={
+                    'invisible': (~Eval('context', {}).get('company')
+                        | Eval('accounts_category')),
+                }, depends=['accounts_category']))
+            cls.account_asset = fields.MultiValue(
+                fields.Many2One('account.account', "Account Asset",
+                domain=[
+                    ('type.fixed_asset', '=', True),
+                    ('company', '=', Eval('context', {}).get('company', -1)),
+                ], states={
+                    'invisible': (~Eval('context', {}).get('company')
+                        | Eval('accounts_category')),
+                }, depends=['accounts_category']))
 
     @classmethod
     def __register__(cls, module_name):
@@ -217,20 +218,28 @@ class TemplateAccount(ModelSQL, CompanyValueMixin):
             ('company', '=', Eval('company', -1)),
             ],
         depends=['company'])
-    account_depreciation = fields.Many2One(
-        'account.account', "Account Depreciation",
-        domain=[
-            ('type.fixed_asset', '=', True),
-            ('company', '=', Eval('company', -1)),
-            ],
-        depends=['company'])
-    account_asset = fields.Many2One(
-        'account.account', "Account Asset",
-        domain=[
-            ('type.fixed_asset', '=', True),
-            ('company', '=', Eval('company', -1)),
-            ],
-        depends=['company'])
+
+    @classmethod
+    def __setup__(cls):
+        Template = Pool().get('product.template')
+
+        super(TemplateAccount, cls).__setup__()
+
+        if hasattr(Template, 'depreciable'):
+            cls.account_depreciation = fields.Many2One(
+                'account.account', "Account Depreciation",
+                domain=[
+                    ('type.fixed_asset', '=', True),
+                    ('company', '=', Eval('company', -1)),
+                    ],
+                depends=['company'])
+            cls.account_asset = fields.Many2One(
+                'account.account', "Account Asset",
+                domain=[
+                    ('type.fixed_asset', '=', True),
+                    ('company', '=', Eval('company', -1)),
+                    ],
+                depends=['company'])
 
     @classmethod
     def __register__(cls, module_name):

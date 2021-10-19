@@ -5,7 +5,8 @@ import unittest
 from decimal import Decimal
 
 import trytond.tests.test_tryton
-from trytond.tests.test_tryton import ModuleTestCase, with_transaction
+from trytond.tests.test_tryton import (ModuleTestCase, with_transaction,
+    activate_module)
 from trytond.pool import Pool
 from trytond.exceptions import UserError
 
@@ -16,6 +17,11 @@ from trytond.modules.account.tests import create_chart
 class AccountProductAccountingTestCase(ModuleTestCase):
     'Test Account Product Accounting module'
     module = 'account_product_accounting'
+
+    @classmethod
+    def setUpClass(cls):
+        super(AccountProductAccountingTestCase, cls).setUpClass()
+        activate_module('account_asset')
 
     @with_transaction()
     def test_account_used(self):
