@@ -10,10 +10,6 @@
           <field name="account_revenue"/>
           <label name="account_expense"/>
           <field name="account_expense"/>
-          <label name="account_depreciation"/>
-          <field name="account_depreciation"/>
-          <label name="account_asset"/>
-          <field name="account_asset"/>
           <separator string="Taxes" id="taxes" colspan="4"/>
           <label name="taxes_category"/>
           <field name="taxes_category"/>

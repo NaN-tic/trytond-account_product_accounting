@@ -34,4 +34,13 @@ this repository contains the full copyright notices and license terms. -->
             <field name="rule_group" ref="rule_group_template_supplier_taxes"/>
         </record>
     </data>
+
+    <data depends="account_asset">
+        <!-- product.template -->
+        <record model="ir.ui.view" id="template_asset_view_form">
+            <field name="model">product.template</field>
+            <field name="inherit" ref="product.template_view_form"/>
+            <field name="name">template_asset_form</field>
+        </record>
+    </data>
 </tryton>
