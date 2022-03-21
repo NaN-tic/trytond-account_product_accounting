@@ -10,18 +10,14 @@ from trytond.tests.test_tryton import (ModuleTestCase, with_transaction,
 from trytond.pool import Pool
 from trytond.exceptions import UserError
 
-from trytond.modules.company.tests import create_company, set_company
+from trytond.modules.company.tests import (CompanyTestMixin, create_company,
+    set_company)
 from trytond.modules.account.tests import create_chart
 
 
-class AccountProductAccountingTestCase(ModuleTestCase):
+class AccountProductAccountingTestCase(CompanyTestMixin, ModuleTestCase):
     'Test Account Product Accounting module'
     module = 'account_product_accounting'
-
-    @classmethod
-    def setUpClass(cls):
-        super(AccountProductAccountingTestCase, cls).setUpClass()
-        activate_module('account_asset')
 
     @with_transaction()
     def test_account_used(self):
