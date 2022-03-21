@@ -17,7 +17,7 @@ this repository contains the full copyright notices and license terms. -->
         </record>
         <record model="ir.rule" id="rule_template_customer_taxes">
             <field name="domain"
-                eval="[('tax.company', '=', Eval('user', {}).get('company', None))]"
+                eval="[('company', 'in', Eval('companies', []))]"
                 pyson="1"/>
             <field name="rule_group" ref="rule_group_template_customer_taxes"/>
         </record>
