@@ -5,8 +5,7 @@ import unittest
 from decimal import Decimal
 
 import trytond.tests.test_tryton
-from trytond.tests.test_tryton import (ModuleTestCase, with_transaction,
-    activate_module)
+from trytond.tests.test_tryton import ModuleTestCase, with_transaction
 from trytond.pool import Pool
 from trytond.exceptions import UserError
 

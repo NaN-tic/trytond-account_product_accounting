@@ -5,7 +5,6 @@ from trytond.model import ModelSQL, fields
 from trytond.pyson import Eval
 from trytond import backend
 from trytond.pool import PoolMeta, Pool
-from trytond.tools.multivalue import migrate_property
 from trytond.modules.company.model import (
     CompanyMultiValueMixin, CompanyValueMixin)
 from trytond.transaction import Transaction
@@ -79,26 +78,6 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
             Eval('accounts_category', False) | Eval('taxes_category', False))
         cls.account_category.depends.extend(
             ['accounts_category', 'taxes_category'])
-
-        if hasattr(cls, 'depreciable'):
-            cls.account_depreciation = fields.MultiValue(
-                fields.Many2One('account.account', "Account Depreciation",
-                domain=[
-                    ('type.fixed_asset', '=', True),
-                    ('company', '=', Eval('context', {}).get('company', -1)),
-                ], states={
-                    'invisible': (~Eval('context', {}).get('company')
-                        | Eval('accounts_category')),
-                }, depends=['accounts_category']))
-            cls.account_asset = fields.MultiValue(
-                fields.Many2One('account.account', "Account Asset",
-                domain=[
-                    ('type.fixed_asset', '=', True),
-                    ('company', '=', Eval('context', {}).get('company', -1)),
-                ], states={
-                    'invisible': (~Eval('context', {}).get('company')
-                        | Eval('accounts_category')),
-                }, depends=['accounts_category']))
 
     @classmethod
     def __register__(cls, module_name):
@@ -222,51 +201,6 @@ class TemplateAccount(ModelSQL, CompanyValueMixin):
             ('company', '=', Eval('company', -1)),
             ],
         depends=['company'])
-
-    @classmethod
-    def __setup__(cls):
-        Template = Pool().get('product.template')
-
-        super(TemplateAccount, cls).__setup__()
-
-        if hasattr(Template, 'depreciable'):
-            cls.account_depreciation = fields.Many2One(
-                'account.account', "Account Depreciation",
-                domain=[
-                    ('type.fixed_asset', '=', True),
-                    ('company', '=', Eval('company', -1)),
-                    ],
-                depends=['company'])
-            cls.account_asset = fields.Many2One(
-                'account.account', "Account Asset",
-                domain=[
-                    ('type.fixed_asset', '=', True),
-                    ('company', '=', Eval('company', -1)),
-                    ],
-                depends=['company'])
-
-    @classmethod
-    def __register__(cls, module_name):
-        exist = backend.TableHandler.table_exist(cls._table)
-        if exist:
-            table = cls.__table_handler__(module_name)
-            exist &= (table.column_exist('account_depreciation')
-                and table.column_exist('account_asset'))
-        super(TemplateAccount, cls).__register__(module_name)
-
-        if not exist:
-            cls._migrate_property([], [], [])
-
-    @classmethod
-    def _migrate_property(cls, field_names, value_names, fields):
-        field_names.extend(['account_expense', 'account_revenue',
-                'account_depreciation', 'account_asset'])
-        value_names.extend(['account_expense', 'account_revenue',
-                'account_depreciation', 'account_asset'])
-        fields.append('company')
-        migrate_property(
-            'product.template', field_names, cls, value_names,
-            parent='template', fields=fields)
 
 
 class TemplateCustomerTax(ModelSQL):

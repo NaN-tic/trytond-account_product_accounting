@@ -4,6 +4,7 @@
 from trytond.pool import Pool
 from . import configuration
 from . import product
+from . import asset
 
 
 def register():
@@ -16,3 +17,8 @@ def register():
         product.TemplateCustomerTax,
         product.TemplateSupplierTax,
         module='account_product_accounting', type_='model')
+    Pool.register(
+        asset.Template,
+        asset.TemplateAccount,
+        module='account_product_accounting', type_='model',
+        depends=['account_asset'])
