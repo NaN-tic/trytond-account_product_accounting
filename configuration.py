@@ -13,13 +13,13 @@ __all__ = ['Configuration', 'ConfigurationDefaultAccount', 'ProductConfiguration
 class Configuration(metaclass=PoolMeta):
     __name__ = 'account.configuration'
     default_product_account_expense = fields.MultiValue(fields.Many2One(
-        'account.account', 'Default Account Expense',
+        'account.account', 'Default Product Account Expense',
         domain=[
             ('type.expense', '=', True),
             ('company', '=', Eval('context', {}).get('company', -1)),
             ]))
     default_product_account_revenue = fields.MultiValue(fields.Many2One(
-        'account.account', 'Default Account Revenue',
+        'account.account', 'Default Product Account Revenue',
         domain=[
             ('type.revenue', '=', True),
             ('company', '=', Eval('context', {}).get('company', -1)),
