@@ -1,10 +1,9 @@
-# This file is part account_product_accounting module for Tryton.
-# The COPYRIGHT file at the top level of this repository contains
-# the full copyright notices and license terms.
-import unittest
+
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
+
 from decimal import Decimal
 
-import trytond.tests.test_tryton
 from trytond.tests.test_tryton import ModuleTestCase, with_transaction
 from trytond.pool import Pool
 from trytond.exceptions import UserError
@@ -15,7 +14,7 @@ from trytond.modules.account.tests import create_chart
 
 
 class AccountProductAccountingTestCase(CompanyTestMixin, ModuleTestCase):
-    'Test Account Product Accounting module'
+    'Test AccountProductAccounting module'
     module = 'account_product_accounting'
 
     @with_transaction()
@@ -153,8 +152,5 @@ class AccountProductAccountingTestCase(CompanyTestMixin, ModuleTestCase):
             self.assertEqual(len(template.customer_taxes), 1)
             self.assertEqual(len(template.customer_taxes_used), 1)
 
-def suite():
-    suite = trytond.tests.test_tryton.suite()
-    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(
-            AccountProductAccountingTestCase))
-    return suite
+
+del ModuleTestCase
