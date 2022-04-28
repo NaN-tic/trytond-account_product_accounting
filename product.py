@@ -76,7 +76,7 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
         super(Template, cls).__setup__()
         cls.account_category.states['required'] = (
             Eval('accounts_category', False) | Eval('taxes_category', False))
-        cls.account_category.depends.extend(
+        cls.account_category.depends.update(
             ['accounts_category', 'taxes_category'])
 
     @classmethod
