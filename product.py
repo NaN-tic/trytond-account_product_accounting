@@ -70,6 +70,17 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
                 | Eval('taxes_category')),
             }, depends=['taxes_category'],
         help="The taxes to apply when purchasing the product.")
+    supplier_taxes_deductible_rate = fields.Numeric(
+        "Supplier Taxes Deductible Rate", digits=(14, 10),
+        domain=[
+            ('supplier_taxes_deductible_rate', '>=', 0),
+            ('supplier_taxes_deductible_rate', '<=', 1),
+            ],
+        states={
+            'invisible': (~Eval('context', {}).get('company')
+                | Eval('taxes_category')),
+            },
+        depends=['taxes_category'])
 
     @classmethod
     def __setup__(cls):
@@ -177,6 +188,11 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
             return [x for x in self.supplier_taxes if x.company.id == company]
         return super().get_taxes(name)
 
+    @property
+    def supplier_taxes_deductible_rate_used(self):
+        if not self.taxes_category and self.supplier_taxes_deductible_rate:
+            return self.supplier_taxes_deductible_rate
+        return super().supplier_taxes_deductible_rate_used
 
 class TemplateAccount(ModelSQL, CompanyValueMixin):
     "Product Template Account"
