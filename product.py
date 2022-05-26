@@ -152,6 +152,10 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
         Config = Pool().get('product.configuration')
         return Config(1).default_taxes_category
 
+    @classmethod
+    def default_supplier_taxes_deductible_rate(cls):
+        return 1
+
     def get_account(self, name, **pattern):
         if self.accounts_category:
             return super(Template, self).get_account(name, **pattern)
@@ -190,7 +194,7 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
 
     @property
     def supplier_taxes_deductible_rate_used(self):
-        if not self.taxes_category and self.supplier_taxes_deductible_rate:
+        if not self.taxes_category:
             return self.supplier_taxes_deductible_rate
         return super().supplier_taxes_deductible_rate_used
 
