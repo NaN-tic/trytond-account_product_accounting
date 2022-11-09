@@ -202,7 +202,7 @@ class TemplateAccount(ModelSQL, CompanyValueMixin):
     "Product Template Account"
     __name__ = 'product.template.account'
     template = fields.Many2One(
-        'product.template', "Template", ondelete='CASCADE', select=True,
+        'product.template', "Template", ondelete='CASCADE',
         context={
             'company': Eval('company'),
             },
@@ -228,7 +228,7 @@ class TemplateCustomerTax(ModelSQL):
     __name__ = 'product.template-customer-account.tax'
     _table = 'product_customer_taxes_rel'
     product = fields.Many2One('product.template', 'Product Template',
-            ondelete='CASCADE', select=True, required=True)
+            ondelete='CASCADE', required=True)
     tax = fields.Many2One('account.tax', 'Tax', ondelete='RESTRICT',
             required=True)
 
@@ -238,6 +238,6 @@ class TemplateSupplierTax(ModelSQL):
     __name__ = 'product.template-supplier-account.tax'
     _table = 'product_supplier_taxes_rel'
     product = fields.Many2One('product.template', 'Product Template',
-            ondelete='CASCADE', select=True, required=True)
+            ondelete='CASCADE', required=True)
     tax = fields.Many2One('account.tax', 'Tax', ondelete='RESTRICT',
             required=True)
