@@ -241,3 +241,7 @@ class TemplateSupplierTax(ModelSQL):
             ondelete='CASCADE', required=True)
     tax = fields.Many2One('account.tax', 'Tax', ondelete='RESTRICT',
             required=True)
+
+
+class Product(metaclass=PoolMeta):
+    __name__ = 'product.product'

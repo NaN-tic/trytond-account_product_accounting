@@ -16,6 +16,7 @@ def register():
         product.TemplateAccount,
         product.TemplateCustomerTax,
         product.TemplateSupplierTax,
+        product.Product,
         module='account_product_accounting', type_='model')
     Pool.register(
         asset.Template,
