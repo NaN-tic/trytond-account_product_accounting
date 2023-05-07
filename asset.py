@@ -5,7 +5,6 @@ from trytond.model import fields
 from trytond.pyson import Eval
 from trytond import backend
 from trytond.pool import PoolMeta
-from trytond.tools.multivalue import migrate_property
 
 
 class Template(metaclass=PoolMeta):
@@ -55,26 +54,3 @@ class TemplateAccount(metaclass=PoolMeta):
                     ('company', '=', Eval('company', -1)),
                     ],
                 depends=['company'])
-
-    @classmethod
-    def __register__(cls, module_name):
-        exist = backend.TableHandler.table_exist(cls._table)
-        if exist:
-            table = cls.__table_handler__(module_name)
-            exist &= (table.column_exist('account_depreciation')
-                and table.column_exist('account_asset'))
-        super(TemplateAccount, cls).__register__(module_name)
-
-        if not exist:
-            cls._migrate_property([], [], [])
-
-    @classmethod
-    def _migrate_property(cls, field_names, value_names, fields):
-        field_names.extend(['account_expense', 'account_revenue',
-                'account_depreciation', 'account_asset'])
-        value_names.extend(['account_expense', 'account_revenue',
-                'account_depreciation', 'account_asset'])
-        fields.append('company')
-        migrate_property(
-            'product.template', field_names, cls, value_names,
-            parent='template', fields=fields)
