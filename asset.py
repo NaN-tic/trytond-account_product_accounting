@@ -3,7 +3,6 @@
 # the full copyright notices and license terms.
 from trytond.model import fields
 from trytond.pyson import Eval
-from trytond import backend
 from trytond.pool import PoolMeta
 
 
