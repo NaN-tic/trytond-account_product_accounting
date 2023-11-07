@@ -48,17 +48,9 @@ msgctxt "field:product.product,customer_taxes:"
 msgid "Customer Taxes"
 msgstr "Impuestos de cliente"
 
-msgctxt "field:product.product,customer_taxes_template_used:"
-msgid "Customer Taxes Template Used"
-msgstr "Impuestos de cliente utilizados"
-
 msgctxt "field:product.product,supplier_taxes:"
 msgid "Supplier Taxes"
 msgstr "Impuestos de proveedor"
-
-msgctxt "field:product.product,supplier_taxes_template_used:"
-msgid "Supplier Taxes Template Used"
-msgstr "Impuestos de proveedor utilizados"
 
 msgctxt "field:product.product,taxes_category:"
 msgid "Use Category's Taxes"
