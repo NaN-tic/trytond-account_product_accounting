@@ -33,6 +33,12 @@ this repository contains the full copyright notices and license terms. -->
                 pyson="1"/>
             <field name="rule_group" ref="rule_group_template_supplier_taxes"/>
         </record>
+        <!-- product.product -->
+        <record model="ir.ui.view" id="product_view_form">
+            <field name="model">product.product</field>
+            <field name="name">product_form</field>
+            <field name="inherit" ref="product.product_view_form"/>
+        </record>
     </data>
 
     <data depends="account_asset">
