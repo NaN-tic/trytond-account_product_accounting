@@ -232,6 +232,11 @@ class TemplateCustomerTax(ModelSQL):
     tax = fields.Many2One('account.tax', 'Tax', ondelete='RESTRICT',
             required=True)
 
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls.__access__.add('tax')
+
 
 class TemplateSupplierTax(ModelSQL):
     'Product Template - Supplier Tax'
@@ -242,6 +247,30 @@ class TemplateSupplierTax(ModelSQL):
     tax = fields.Many2One('account.tax', 'Tax', ondelete='RESTRICT',
             required=True)
 
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls.__access__.add('tax')
+
 
 class Product(metaclass=PoolMeta):
     __name__ = 'product.product'
+
+    customer_taxes = fields.Function(fields.Many2Many(
+        'account.tax', None, None, "Customer Taxes"), 'get_taxes')
+    supplier_taxes = fields.Function(fields.Many2Many(
+        'account.tax', None, None, "Supplier Taxes"), 'get_taxes')
+
+    @classmethod
+    def __setup__(cls):
+        if not hasattr(cls, '_no_template_field'):
+            cls._no_template_field = set()
+        cls._no_template_field.update(['customer_taxes', 'supplier_taxes'])
+        super(Product, cls).__setup__()
+
+    @fields.depends('template', '_parent_template.customer_taxes',
+        '_parent_template.supplier_taxes')
+    def get_taxes(self, name):
+        company = Transaction().context.get('company')
+        return [x.id for x in getattr(self.template, name)
+            if x.company.id == company]
