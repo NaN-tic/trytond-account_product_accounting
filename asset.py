@@ -8,51 +8,42 @@ from trytond.pool import PoolMeta
 
 class Template(metaclass=PoolMeta):
     __name__ = 'product.template'
+    account_depreciation = fields.MultiValue(
+            fields.Many2One('account.account', "Account Depreciation",
+            domain=[
+                ('type.fixed_asset', '=', True),
+                ('company', '=', Eval('context', {}).get('company', -1)),
+            ], states={
+                'invisible': (~Eval('context', {}).get('company')
+                    | Eval('accounts_category')),
+            }, depends=['accounts_category']))
+    account_asset = fields.MultiValue(
+            fields.Many2One('account.account', "Account Asset",
+            domain=[
+                ('type.fixed_asset', '=', True),
+                ('company', '=', Eval('context', {}).get('company', -1)),
+            ], states={
+                'invisible': (~Eval('context', {}).get('company')
+                    | Eval('accounts_category')),
+            }, depends=['accounts_category']))
 
-    @classmethod
-    def __setup__(cls):
-        super(Template, cls).__setup__()
-
-        cls.account_depreciation = fields.MultiValue(
-                fields.Many2One('account.account', "Account Depreciation",
-                domain=[
-                    ('type.fixed_asset', '=', True),
-                    ('company', '=', Eval('context', {}).get('company', -1)),
-                ], states={
-                    'invisible': (~Eval('context', {}).get('company')
-                        | Eval('accounts_category')),
-                }, depends=['accounts_category']))
-
-        cls.account_asset = fields.MultiValue(
-                fields.Many2One('account.account', "Account Asset",
-                domain=[
-                    ('type.fixed_asset', '=', True),
-                    ('company', '=', Eval('context', {}).get('company', -1)),
-                ], states={
-                    'invisible': (~Eval('context', {}).get('company')
-                        | Eval('accounts_category')),
-                }, depends=['accounts_category']))
 
 class TemplateAccount(metaclass=PoolMeta):
     __name__ = 'product.template.account'
-
-    @classmethod
-    def __setup__(cls):
-        super(TemplateAccount, cls).__setup__()
-        cls.account_depreciation = fields.Many2One(
-                'account.account', "Account Depreciation",
-                domain=[
-                    ('type.fixed_asset', '=', True),
-                    ('company', '=', Eval('company', -1)),
-                    ],
-                depends=['company'])
-        cls.account_asset = fields.Many2One(
-                'account.account', "Account Asset",
-                domain=[
-                    ('type.fixed_asset', '=', True),
-                    ('company', '=', Eval('company', -1)),
-                    ],
-                depends=['company'])
+    account_depreciation = fields.Many2One(
+            'account.account', "Account Depreciation",
+            domain=[
+                ('type.fixed_asset', '=', True),
+                ('company', '=', Eval('company', -1)),
+                ],
+            depends=['company'])
+    account_asset = fields.Many2One(
+            'account.account', "Account Asset",
+            domain=[
+                ('type.fixed_asset', '=', True),
+                ('company', '=', Eval('company', -1)),
+                ],
+            depends=['company'])
 
 
 class Product(metaclass=PoolMeta):
