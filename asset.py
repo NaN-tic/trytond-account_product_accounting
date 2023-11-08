@@ -53,3 +53,7 @@ class TemplateAccount(metaclass=PoolMeta):
                     ('company', '=', Eval('company', -1)),
                     ],
                 depends=['company'])
+
+
+class Product(metaclass=PoolMeta):
+    __name__ = 'product.product'
