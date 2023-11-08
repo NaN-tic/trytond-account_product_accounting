@@ -21,5 +21,6 @@ def register():
     Pool.register(
         asset.Template,
         asset.TemplateAccount,
+        asset.Product,
         module='account_product_accounting', type_='model',
         depends=['account_asset'])
