@@ -204,7 +204,7 @@ class TemplateAccount(ModelSQL, CompanyValueMixin):
     template = fields.Many2One(
         'product.template', "Template", ondelete='CASCADE', select=True,
         context={
-            'company': Eval('company'),
+            'company': Eval('company', -1),
             },
         depends=['company'])
     account_expense = fields.Many2One(
