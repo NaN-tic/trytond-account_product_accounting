@@ -79,8 +79,7 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
         states={
             'invisible': (~Eval('context', {}).get('company')
                 | Eval('taxes_category')),
-            },
-        depends=['taxes_category'])
+            })
 
     @classmethod
     def __setup__(cls):
@@ -212,15 +211,13 @@ class TemplateAccount(ModelSQL, CompanyValueMixin):
         domain=[
             ('type.expense', '=', True),
             ('company', '=', Eval('company', -1)),
-            ],
-        depends=['company'])
+            ])
     account_revenue = fields.Many2One(
         'account.account', "Account Revenue",
         domain=[
             ('type.revenue', '=', True),
             ('company', '=', Eval('company', -1)),
-            ],
-        depends=['company'])
+            ])
 
 
 class TemplateCustomerTax(ModelSQL):

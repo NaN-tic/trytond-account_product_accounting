@@ -35,15 +35,13 @@ class TemplateAccount(metaclass=PoolMeta):
             domain=[
                 ('type.fixed_asset', '=', True),
                 ('company', '=', Eval('company', -1)),
-                ],
-            depends=['company'])
+                ])
     account_asset = fields.Many2One(
             'account.account', "Account Asset",
             domain=[
                 ('type.fixed_asset', '=', True),
                 ('company', '=', Eval('company', -1)),
-                ],
-            depends=['company'])
+                ])
 
 
 class Product(metaclass=PoolMeta):

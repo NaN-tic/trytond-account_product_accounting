@@ -41,15 +41,13 @@ class ConfigurationDefaultAccount(metaclass=PoolMeta):
         domain=[
             ('type.expense', '=', True),
             ('company', '=', Eval('company', -1)),
-            ],
-        depends=['company'])
+            ])
     default_product_account_revenue = fields.Many2One(
         'account.account', "Default Product Account Revenue",
         domain=[
             ('type.revenue', '=', True),
             ('company', '=', Eval('company', -1)),
-            ],
-        depends=['company'])
+            ])
 
 
 class ProductConfiguration(metaclass=PoolMeta):
