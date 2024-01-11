@@ -30,7 +30,7 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
                     | Eval('accounts_category')),
                 },
             help=("The account to use instead of the one defined on the "
-                "account category."), depends=['accounts_category']))
+                "account category.")))
     account_revenue = fields.MultiValue(fields.Many2One('account.account',
             'Account Revenue', domain=[
                 ('type.revenue', '=', True),
@@ -41,7 +41,7 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
                     | Eval('accounts_category')),
                 },
             help=("The account to use instead of the one defined on the "
-                "account category."), depends=['accounts_category']))
+                "account category.")))
     taxes_category = fields.Boolean('Use Category\'s Taxes',
             help="Check to use the taxes defined on the account category.")
     customer_taxes = fields.Many2Many('product.template-customer-account.tax',
@@ -55,7 +55,7 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
         states={
             'invisible': (~Eval('context', {}).get('company')
                 | Eval('taxes_category')),
-            }, depends=['taxes_category'],
+            },
         help="The taxes to apply when selling the product.")
     supplier_taxes = fields.Many2Many('product.template-supplier-account.tax',
         'product', 'tax', 'Supplier Taxes',
@@ -68,7 +68,7 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
         states={
             'invisible': (~Eval('context', {}).get('company')
                 | Eval('taxes_category')),
-            }, depends=['taxes_category'],
+            },
         help="The taxes to apply when purchasing the product.")
     supplier_taxes_deductible_rate = fields.Numeric(
         "Supplier Taxes Deductible Rate", digits=(14, 10),

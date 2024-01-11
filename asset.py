@@ -16,7 +16,7 @@ class Template(metaclass=PoolMeta):
             ], states={
                 'invisible': (~Eval('context', {}).get('company')
                     | Eval('accounts_category')),
-            }, depends=['accounts_category']))
+            }))
     account_asset = fields.MultiValue(
             fields.Many2One('account.account', "Account Asset",
             domain=[
@@ -25,7 +25,7 @@ class Template(metaclass=PoolMeta):
             ], states={
                 'invisible': (~Eval('context', {}).get('company')
                     | Eval('accounts_category')),
-            }, depends=['accounts_category']))
+            }))
 
 
 class TemplateAccount(metaclass=PoolMeta):
