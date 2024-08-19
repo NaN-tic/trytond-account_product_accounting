@@ -83,7 +83,7 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Template, cls).__setup__()
+        super().__setup__()
         cls.account_category.states['required'] = (
             Eval('accounts_category', False) | Eval('taxes_category', False))
         cls.account_category.depends.update(
@@ -107,7 +107,7 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
                 and not table.column_exist('accounts_category')):
             table.column_rename('account_category', 'accounts_category')
 
-        super(Template, cls).__register__(module_name)
+        super().__register__(module_name)
 
         # Migration from 3.8: duplicate category into account_category
         if category_exists:
@@ -123,7 +123,7 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
         if field in {'account_expense', 'account_revenue',
                 'account_depreciation', 'account_asset'}:
             return pool.get('product.template.account')
-        return super(Template, cls).multivalue_model(field)
+        return super().multivalue_model(field)
 
     @classmethod
     def default_account_expense(cls, **pattern):
@@ -157,7 +157,7 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
 
     def get_account(self, name, **pattern):
         if self.accounts_category:
-            return super(Template, self).get_account(name, **pattern)
+            return super().get_account(name, **pattern)
         else:
             return self.get_multivalue(name[:-5], **pattern)
 
@@ -263,7 +263,7 @@ class Product(metaclass=PoolMeta):
         if not hasattr(cls, '_no_template_field'):
             cls._no_template_field = set()
         cls._no_template_field.update(['customer_taxes', 'supplier_taxes'])
-        super(Product, cls).__setup__()
+        super().__setup__()
 
     def get_taxes(self, name):
         company = Transaction().context.get('company')
