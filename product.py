@@ -265,8 +265,6 @@ class Product(metaclass=PoolMeta):
         cls._no_template_field.update(['customer_taxes', 'supplier_taxes'])
         super(Product, cls).__setup__()
 
-    @fields.depends('template', '_parent_template.customer_taxes',
-        '_parent_template.supplier_taxes')
     def get_taxes(self, name):
         company = Transaction().context.get('company')
         return [x.id for x in getattr(self.template, name)
