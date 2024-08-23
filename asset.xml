@@ -6,6 +6,8 @@ this repository contains the full copyright notices and license terms. -->
         <!-- product.template -->
         <record model="ir.ui.view" id="template_asset_view_form">
             <field name="model">product.template</field>
+            <!--Added decreased priority so the fields are displayed after account_asset's-->
+            <field name="priority" eval="20"/>
             <field name="inherit" ref="product.template_view_form"/>
             <field name="name">template_asset_form</field>
         </record>
