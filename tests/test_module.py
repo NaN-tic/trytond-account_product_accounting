@@ -37,15 +37,18 @@ class AccountProductAccountingTestCase(CompanyTestMixin, ModuleTestCase):
                     ])
             account_expense, = Account.search([
                     ('type.expense', '=', True),
-                    ])
+                    ('closed', '=', False),
+                    ], limit=1)
             account_expense2, = Account.copy([account_expense])
             account_revenue, = Account.search([
                     ('type.revenue', '=', True),
-                    ])
+                    ('closed', '=', False),
+                    ], limit=1)
 
             account_tax, = Account.search([
-                    ('name', '=', 'Main Tax'),
-                    ])
+                    ('code', '=', '1.1.1'), # Main Cash
+                    ('closed', '=', False),
+                    ], limit=1)
             tax, tax2 = Tax.create([{
                     'name': 'Tax 1',
                     'description': 'Tax 1',
