@@ -46,7 +46,7 @@ class AccountProductAccountingTestCase(CompanyTestMixin, ModuleTestCase):
                     ], limit=1)
 
             account_tax, = Account.search([
-                    ('code', '=', '1.1.1'), # Main Cash
+                    ('code', '=', '6.3.6'), # Main Tax
                     ('closed', '=', False),
                     ], limit=1)
             tax, tax2 = Tax.create([{
