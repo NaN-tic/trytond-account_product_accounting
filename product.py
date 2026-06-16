@@ -97,7 +97,7 @@ class Template(CompanyMultiValueMixin, metaclass=PoolMeta):
         Category = pool.get('product.category')
         sql_table = cls.__table__()
         category = Category.__table__()
-        table = backend.TableHandler(cls, module_name)
+        table = cls.__table_handler__(module_name)
         category_exists = table.column_exist('category')
 
         # Migration from 3.8: rename account_category into accounts_category
