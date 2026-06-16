@@ -4,7 +4,6 @@
 from trytond.model import fields
 from trytond.pyson import Eval
 from trytond.pool import PoolMeta, Pool
-from trytond import backend
 
 
 __all__ = ['Configuration', 'ConfigurationDefaultAccount', 'ProductConfiguration']
@@ -62,7 +61,7 @@ class ProductConfiguration(metaclass=PoolMeta):
 
         # Migration from 3.8: rename default_account_category into
         # default_accounts_category
-        table = backend.TableHandler(cls, module_name)
+        table = cls.__table_handler__(module_name)
         if table.column_exist('default_account_category'):
             table.column_rename(
                 'default_account_category', 'default_accounts_category')
