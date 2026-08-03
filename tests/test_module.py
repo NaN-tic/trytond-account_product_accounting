@@ -16,7 +16,7 @@ from trytond.modules.account.tests import create_chart
 class AccountProductAccountingTestCase(CompanyTestMixin, ModuleTestCase):
     'Test AccountProductAccounting module'
     module = 'account_product_accounting'
-    extras = ['account_asset']
+    extras = ['account_asset', 'analytic_invoice']
 
     @with_transaction()
     def test_account_used(self):
@@ -24,9 +24,14 @@ class AccountProductAccountingTestCase(CompanyTestMixin, ModuleTestCase):
         pool = Pool()
         ProductTemplate = pool.get('product.template')
         ProductCategory = pool.get('product.category')
+        Asset = pool.get('account.asset')
         Uom = pool.get('product.uom')
         Account = pool.get('account.account')
         Tax = pool.get('account.tax')
+
+        self.assertEqual(
+            Asset.get_closing_move.__module__,
+            'trytond.modules.account_product_accounting.asset')
 
         company = create_company()
         with set_company(company):
