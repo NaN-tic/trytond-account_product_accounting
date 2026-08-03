@@ -24,3 +24,7 @@ def register():
         asset.Product,
         module='account_product_accounting', type_='model',
         depends=['account_asset'])
+    Pool.register(
+        asset.Asset,
+        module='account_product_accounting', type_='model',
+        depends=['account_asset', 'analytic_invoice'])
