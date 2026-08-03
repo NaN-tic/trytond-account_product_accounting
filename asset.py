@@ -46,3 +46,27 @@ class TemplateAccount(metaclass=PoolMeta):
 
 class Product(metaclass=PoolMeta):
     __name__ = 'product.product'
+
+
+class Asset(metaclass=PoolMeta):
+    __name__ = 'account.asset'
+
+    def get_closing_move(self, account, date=None):
+        from trytond.modules.analytic_invoice.asset import Asset as AnalyticAsset
+
+        move = super(AnalyticAsset, self).get_closing_move(account, date=date)
+        if not self.analytic_accounts:
+            return move
+        if not account:
+            square_amount = (
+                self.value
+                - self.get_depreciated_amount()
+                - self.depreciated_amount)
+            if not square_amount:
+                return move
+            if square_amount < 0:
+                account = self.product.account_revenue_used
+            else:
+                account = self.product.account_expense_used
+        self.set_analytic_lines(move, account)
+        return move
